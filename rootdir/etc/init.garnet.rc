@@ -36,6 +36,10 @@ on boot
     chown system system /sys/class/power_supply/battery/temp
     chmod 0660 /sys/class/power_supply/battery/temp
 
+    # Workarround for cache
+    rm /data/resource-cache
+    rm /data/system/package_cache
+
     # GPU 
     chown system system /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
     chown system system /sys/class/kgsl/kgsl-3d0/devfreq/max_clock_mhz
