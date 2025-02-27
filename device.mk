@@ -478,3 +478,5 @@ PRODUCT_COPY_FILES += \
 
 # Vendor
 $(call inherit-product, vendor/xiaomi/garnet/garnet-vendor.mk)
+
+-include vendor/lineage-priv/keys/keys.mk
