@@ -41,8 +41,6 @@ lib_fixups: lib_fixups_user_type = {
         'vendor.qti.hardware.qccvndhal@1.0',
         'vendor.qti.imsrtpservice@3.0',
         'vendor.qti.diaghal@1.0',
-        'vendor.qti.hardware.wifidisplaysession@1.0',
-        'com.qualcomm.qti.dpm.api@1.0',
     ): lib_fixup_vendor_suffix,
     (
         'libagmclient',
@@ -54,21 +52,6 @@ lib_fixups: lib_fixups_user_type = {
 }
 
 blob_fixups: blob_fixups_user_type = {
-    'system_ext/bin/wfdservice64': blob_fixup()
-        .add_needed('libwfdservice_shim.so'),
-    'system_ext/lib64/libwfdnative.so': blob_fixup()
-        .add_needed('libinput_shim.so'),
-    'system_ext/lib64/libwfdmmsrc_system.so': blob_fixup()
-        .add_needed('libgui_shim.so'),
-    'vendor/lib64/nfc_nci.nqx.default.hw.v1.so': blob_fixup()
-        .add_needed('libbase_shim.so'),
-    'vendor/lib64/libQnnDspV65CalculatorStub.so': blob_fixup()
-        .add_needed('liblog.so'),
-    'vendor/bin/qcc-trd': blob_fixup()
-         .replace_needed('libgrpc++_unsecure.so', 'libgrpc++_unsecure_prebuilt.so'),
-    'vendor/lib64/libcamximageformatutils.so': blob_fixup()
-        .replace_needed('vendor.qti.hardware.display.config-V2-ndk_platform.so', 'vendor.qti.hardware.display.config-V2-ndk.so'),
-    (
         'vendor/bin/hw/android.hardware.security.keymint-service-qti',
         'vendor/lib64/libqtikeymint.so',
     ): blob_fixup()
@@ -150,6 +133,18 @@ blob_fixups: blob_fixups_user_type = {
             'android.media.audio.common.types-V2-cpp.so',
             'android.media.audio.common.types-V4-cpp.so',
         ),
+    'vendor/etc/perf/commonresourceconfigs.xml': blob_fixup()
+        .regex_replace('.+<Minor OpcodeValue="0x16" Node="/sys/devices/system/cpu/bus_dcvs/L3/soc:qcom,memlat:l3:prime/min_freq" />+\n', '')
+        .regex_replace('.+<Minor OpcodeValue="0x12" Node="/sys/devices/system/cpu/bus_dcvs/LLCC/190b6400.qcom,bwmon-llcc/max_freq" />+\n', '')
+        .regex_replace('.+<Minor OpcodeValue="0x11" Node="/sys/devices/system/cpu/bus_dcvs/LLCC/190b6400.qcom,bwmon-llcc/min_freq" />+\n', ''),    
+    'vendor/lib64/libcamximageformatutils.so': blob_fixup()
+        .replace_needed('vendor.qti.hardware.display.config-V2-ndk_platform.so', 'vendor.qti.hardware.display.config-V2-ndk.so'),
+    ('vendor/lib64/libqcrilNr.so', 'vendor/lib64/libril-db.so'): blob_fixup()
+        .binary_regex_replace(rb'persist\.vendor\.radio\.poweron_opt', rb'persist.vendor.radio.poweron_ign'), 
+    'vendor/lib64/libkaraokepal.so': blob_fixup()
+        .replace_needed('audio.primary.parrot.so', 'audio.primary.garnet.so'),         
+    'vendor/lib64/vendor.libdpmframework.so': blob_fixup()
+        .add_needed('libhidlbase_shim.so'),
 }  # fmt: skip
 
 module = ExtractUtilsModule(
